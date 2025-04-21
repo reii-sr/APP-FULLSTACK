@@ -1,3 +1,4 @@
 export function highlightRow(id) {
-  document.getElementById(id).style.background = '#eef';
+  const el = document.getElementById(id);
+  if (el) el.style.backgroundColor = '#eef';
 }
