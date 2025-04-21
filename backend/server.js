@@ -1,4 +1,4 @@
-= require('express');
+const express = require('express');
 const reportRoutes = require('./routes/report');
 const app = express();
 app.use(express.json());
