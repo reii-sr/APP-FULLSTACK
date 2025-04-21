@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpwd
+      MYSQL_DATABASE: analytics
+    volumes:
+      - ./datos-backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - '3306:3306'
+
+  datos:
+    build: ./datos-backend/backend
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASS: ''
+      DB_NAME: analytics
+    ports:
+      - '4000:4000'
+    depends_on:
+      - db
+
+  ui:
+    build: ./ui-frontend
+    ports:
+      - '3000:3000'
+    depends_on:
+      - datos
+
+  asistente-backend:
+    build: ./asistente/backend
+    environment:
+      OPENAI_API_KEY: YOUR_KEY_HERE
+    ports:
+      - '5000:5000'
+    depends_on:
+      - db
+
+  asistente-frontend:
+    build: ./asistente/frontend
+    ports:
+      - '3001:3000'
+    depends_on:
+      - asistente-backend
